@@ -132,7 +132,6 @@
 
         <div id="album-container"></div>
 
-        <!-- SECTION GAME -->
         <div id="game-container">
             <h3 style="color: var(--pink-tua);">Mini Game: Nafisa Fly! ☁️</h3>
             <div style="position: relative;">
@@ -168,14 +167,21 @@
 
         function bukaKejutan() {
             const lagu = document.getElementById('musik');
-            lagu.currentTime = 5; 
+            // DURASI: Mulai dari detik ke-10
+            lagu.currentTime = 8; 
             lagu.volume = 0;
+            
             lagu.play().then(() => {
                 let vol = 0;
+                // FADE IN dipercepat (naik setiap 50ms)
                 let fadeIn = setInterval(() => {
-                    if (vol < 1) { vol += 0.05; lagu.volume = Math.min(vol, 1); } 
-                    else { clearInterval(fadeIn); }
-                }, 150);
+                    if (vol < 1) { 
+                        vol += 0.1; 
+                        lagu.volume = Math.min(vol, 1); 
+                    } else { 
+                        clearInterval(fadeIn); 
+                    }
+                }, 50); 
             });
 
             const container = document.getElementById('album-container');
@@ -203,7 +209,6 @@
             buatStiker();
         }
 
-        // --- LOGIKA GAME ---
         let gameStarted = false;
         const canvas = document.getElementById("flappyCanvas");
         const ctx = canvas.getContext("2d");
