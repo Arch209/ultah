@@ -232,7 +232,7 @@
 
         function createPipe() {
             if (frame % 110 === 0) { // Pipa muncul lebih jarang
-                let gap = 180; // Celah pipa LEBIH LEBAR (Sangat Mudah)
+                let gap = 230; // Celah pipa LEBIH LEBAR (Sangat Mudah)
                 let pipeTopHeight = Math.random() * (canvas.height - gap - 100) + 50;
                 pipes.push({ x: canvas.width, top: pipeTopHeight, bottom: pipeTopHeight + gap });
             }
