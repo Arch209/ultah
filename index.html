@@ -11,7 +11,6 @@
             --bg-soft: #fff5f7;
         }
 
-        /* Lock Scroll sebelum klik */
         body.locked {
             overflow: hidden !important;
             height: 100vh;
@@ -26,36 +25,25 @@
             scroll-behavior: smooth;
         }
 
-        /* Overlay Pembuka */
         #pembuka {
-            position: fixed;
-            inset: 0;
-            background: white;
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 20px;
+            position: fixed; inset: 0;
+            background: white; z-index: 9999;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            text-align: center; padding: 20px;
         }
 
-        .btn-play {
+        .btn-play, .btn-start-game {
             background: var(--pink-tua);
-            color: white;
-            border: none;
-            padding: 18px 45px;
-            border-radius: 50px;
-            font-size: 1.3rem;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 8px 20px rgba(255, 133, 162, 0.4);
+            color: white; border: none;
+            padding: 15px 40px; border-radius: 50px;
+            font-size: 1.2rem; font-weight: bold;
+            cursor: pointer; box-shadow: 0 5px 15px rgba(255, 133, 162, 0.4);
             transition: 0.3s;
         }
 
         .btn-play:hover { transform: scale(1.1); background: #ff4d7d; }
 
-        /* Konten Utama */
         #content {
             display: none; 
             max-width: 600px;
@@ -65,43 +53,55 @@
             z-index: 20;
         }
 
-        /* Frame Foto */
         .bingkai-foto {
-            background: white;
-            padding: 12px;
-            margin: 60px 0;
+            background: white; padding: 12px; margin: 60px 0;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            border: 10px solid #fff;
-            outline: 2px solid var(--pink-utama);
+            border: 10px solid #fff; outline: 2px solid var(--pink-utama);
             transition: 0.5s;
         }
 
         .bingkai-foto img { width: 100%; display: block; border-radius: 2px; }
         
         .caption {
-            text-align: center;
-            margin-top: 15px;
-            color: #d81b60;
-            font-weight: bold;
-            font-style: italic;
+            text-align: center; margin-top: 15px;
+            color: #d81b60; font-weight: bold; font-style: italic;
         }
 
         .pesan-pilates {
-            background: #ffe4e8;
-            padding: 25px;
-            border-radius: 25px;
-            border: 2px dashed var(--pink-tua);
-            text-align: center;
-            margin-bottom: 50px;
-            line-height: 1.6;
-            color: #555;
+            background: #ffe4e8; padding: 25px; border-radius: 25px;
+            border: 2px dashed var(--pink-tua); text-align: center;
+            margin-bottom: 50px; line-height: 1.6; color: #555;
         }
 
-        /* Stiker Melayang */
+        /* GAME SECTION */
+        #game-container {
+            text-align: center;
+            margin-top: 80px;
+            padding: 20px;
+            background: white;
+            border-radius: 30px;
+            position: relative;
+        }
+
+        #flappyCanvas {
+            background: #ffeef2;
+            border: 4px solid var(--pink-utama);
+            border-radius: 15px;
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+            cursor: pointer;
+        }
+
+        #gameOverlay {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 100;
+        }
+
         .sticker {
-            position: fixed;
-            pointer-events: none;
-            z-index: 10;
+            position: fixed; pointer-events: none; z-index: 10;
             animation: melayang 4s infinite ease-in-out;
         }
 
@@ -113,95 +113,75 @@
 </head>
 <body class="locked">
 
-    <!-- Tombol Play Awal -->
     <div id="pembuka">
-        <h2 style="color: var(--pink-tua); margin-bottom: 10px;">Hai Nafisa 👋</h2>
+        <h2 style="color: var(--pink-tua);">Hai Nafisa 👋</h2>
         <p style="margin-bottom: 30px; color: #777;">Ada kejutan kecil buat kamu hari ini...</p>
         <button class="btn-play" onclick="bukaKejutan()">Buka Sekarang ❤️</button>
     </div>
 
-    <!-- Konten Isi -->
     <div id="content">
         <header style="text-align: center; margin-bottom: 40px;">
             <h1 style="color: var(--pink-tua); font-size: 2.2rem;">Happy Birthday Nafisa! 🎂</h1>
-            <p style="color: #999;">Ciee yang hari ini bertambah umur (14 Mei) ✨</p>
+            <p style="color: #999;">14 Mei 2026 — Special Day ✨</p>
         </header>
 
         <div class="pesan-pilates">
-            Katanya lagi semangat mau belajar <b>Pilates</b> ya? 🔥<br>
-            Semangat terus latihannya sayang! Biar makin sehat, makin lentur, dan makin cantik pastinya! 🧘‍♀️🌸
+            Semangat belajar <b>Pilates</b>-nya! 🔥<br>
+            Biar badannya makin sehat & lentur terus sayang! 🧘‍♀️🌸
         </div>
 
-        <!-- Album akan diisi otomatis oleh JS -->
         <div id="album-container"></div>
+
+        <!-- SECTION GAME -->
+        <div id="game-container">
+            <h3 style="color: var(--pink-tua);">Mini Game: Nafisa Fly! ☁️</h3>
+            <div style="position: relative;">
+                <canvas id="flappyCanvas" width="320" height="480"></canvas>
+                <div id="gameOverlay">
+                    <button class="btn-start-game" id="startBtn" onclick="startGame()">MULAI GAME</button>
+                </div>
+            </div>
+            <p id="scoreBoard" style="font-weight: bold; color: var(--pink-tua); font-size: 1.2rem; margin-top: 10px;">Score: 0</p>
+        </div>
 
         <footer style="text-align: center; padding: 100px 0 50px 0; color: var(--pink-tua);">
             <hr style="border: 0; border-top: 1px solid var(--pink-utama); margin-bottom: 40px;">
             <h2>I Love You So Much, Nafisa! ❤️</h2>
-            <p style="font-size: 0.9rem; opacity: 0.7;">Stay happy and healthy always.</p>
         </footer>
     </div>
 
-    <!-- Musik -->
     <audio id="musik" loop>
         <source src="lagugalau.mp3" type="audio/mpeg">
     </audio>
 
     <script>
-        // Caption untuk 15 foto
         const daftarCaption = [
-            "Foto favorit aku bgt! 🎀",
-            "Cantiknya kelewatan.. 😍",
-            "Ciee yang ultah hari ini 🎈",
-            "Semangat pilatesnya yaa! ✨",
-            "Tersenyum terus ya sayang ❤️",
-            "Mood booster aku setiap hari",
-            "Jangan pernah berubah ya..",
-            "Kamu itu istimewa bgt 🌸",
-            "Stay healthy & happy Nafisa!",
-            "I'm so lucky to have you 🧸",
-            "Glow up terus ya cantik!",
-            "Makin dewasa makin bijak ✨",
-            "Nafisa paling terbaik! ❤️",
-            "Bahagia terus bareng aku ya..",
-            "Love you to the moon and back! 🌙"
+            "Foto favorit aku bgt! 🎀", "Cantiknya kelewatan.. 😍", "Ciee yang ultah hari ini 🎈",
+            "Semangat pilatesnya yaa! ✨", "Tersenyum terus ya sayang ❤️", "Mood booster aku setiap hari",
+            "Jangan pernah berubah ya..", "Kamu itu istimewa bgt 🌸", "Stay healthy & happy Nafisa!",
+            "I'm so lucky to have you 🧸", "Glow up terus ya cantik!", "Makin dewasa makin bijak ✨",
+            "Nafisa paling terbaik! ❤️", "Bahagia terus bareng aku ya..", "Love you to the moon and back! 🌙"
         ];
+
+        const birdImg = new Image();
+        birdImg.src = 'foto/2.jpg'; 
 
         function bukaKejutan() {
             const lagu = document.getElementById('musik');
-            
-            // --- LOGIKA AUDIO (TRIM & FADE) ---
-            lagu.currentTime = 5; // Skip 5 detik awal
-            lagu.volume = 0;      // Start dari volume 0 (Fade In)
-            
+            lagu.currentTime = 5; 
+            lagu.volume = 0;
             lagu.play().then(() => {
-                // Proses Fade In
                 let vol = 0;
                 let fadeIn = setInterval(() => {
-                    if (vol < 1) {
-                        vol += 0.05;
-                        lagu.volume = Math.min(vol, 1);
-                    } else {
-                        clearInterval(fadeIn);
-                    }
-                }, 150); // Fade in halus dalam ~3 detik
+                    if (vol < 1) { vol += 0.05; lagu.volume = Math.min(vol, 1); } 
+                    else { clearInterval(fadeIn); }
+                }, 150);
             });
 
-            // Pantau lagu untuk Fade Out sebelum looping (opsional tapi bagus)
-            lagu.ontimeupdate = function() {
-                let sisaWaktu = lagu.duration - lagu.currentTime;
-                if (sisaWaktu < 3 && lagu.volume > 0.05) {
-                    lagu.volume -= 0.05;
-                }
-            };
-
-            // --- RENDER FOTO OTOMATIS ---
             const container = document.getElementById('album-container');
             for (let i = 1; i <= 15; i++) {
                 const div = document.createElement('div');
                 div.className = 'bingkai-foto';
-                
-                // Variasi miring dan lebar agar tidak monoton
                 const rotasi = (Math.random() * 8 - 4).toFixed(2); 
                 const lebar = Math.floor(Math.random() * (95 - 78 + 1)) + 78;
                 div.style.transform = `rotate(${rotasi}deg)`;
@@ -215,15 +195,91 @@
                 container.appendChild(div);
             }
 
-            // --- BUKA KUNCI TAMPILAN ---
             document.getElementById('content').style.display = 'block';
             document.getElementById('pembuka').style.display = 'none';
             document.body.classList.remove('locked');
             document.body.style.overflow = 'auto';
             document.documentElement.style.overflow = 'auto';
-
             buatStiker();
         }
+
+        // --- LOGIKA GAME ---
+        let gameStarted = false;
+        const canvas = document.getElementById("flappyCanvas");
+        const ctx = canvas.getContext("2d");
+        const scoreEl = document.getElementById("scoreBoard");
+        const startBtn = document.getElementById("startBtn");
+
+        let birdY = 200, gravity = 0.6, velocity = 0, jump = -8, score = 0;
+        let pipes = [], frame = 0, gameActive = false;
+        const birdSize = 45;
+
+        function startGame() {
+            startBtn.parentElement.style.display = 'none';
+            gameActive = true;
+            resetGame();
+        }
+
+        function drawBird() {
+            ctx.save(); ctx.beginPath();
+            ctx.arc(70, birdY, birdSize/2, 0, Math.PI * 2);
+            ctx.closePath(); ctx.clip();
+            ctx.drawImage(birdImg, 70 - birdSize/2, birdY - birdSize/2, birdSize, birdSize);
+            ctx.restore();
+            ctx.strokeStyle = "#ff85a2"; ctx.lineWidth = 3;
+            ctx.beginPath(); ctx.arc(70, birdY, birdSize/2, 0, Math.PI * 2);
+            ctx.stroke();
+        }
+
+        function createPipe() {
+            if (frame % 100 === 0) {
+                let gap = 150;
+                let pipeTopHeight = Math.random() * (canvas.height - gap - 100) + 50;
+                pipes.push({ x: canvas.width, top: pipeTopHeight, bottom: pipeTopHeight + gap });
+            }
+        }
+
+        function drawPipes() {
+            ctx.fillStyle = "#ffafbd"; 
+            pipes.forEach((p, index) => {
+                p.x -= 2.5;
+                ctx.fillRect(p.x, 0, 50, p.top);
+                ctx.fillRect(p.x, p.bottom, 50, canvas.height - p.bottom);
+                if (p.x + 50 < 0) { pipes.splice(index, 1); score++; scoreEl.innerText = "Score: " + score; }
+                if (70 + 15 > p.x && 70 - 15 < p.x + 50 && (birdY - 15 < p.top || birdY + 15 > p.bottom)) {
+                    gameOver();
+                }
+            });
+        }
+
+        function gameOver() {
+            gameActive = false;
+            startBtn.innerText = "COBA LAGI";
+            startBtn.parentElement.style.display = 'block';
+        }
+
+        function resetGame() {
+            birdY = 200; velocity = 0; pipes = []; score = 0; frame = 0; 
+            scoreEl.innerText = "Score: 0";
+            update();
+        }
+
+        function update() {
+            if (!gameActive) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            velocity += gravity; birdY += velocity;
+            if (birdY + 20 > canvas.height || birdY - 20 < 0) { gameOver(); return; }
+            drawPipes(); createPipe(); drawBird(); frame++;
+            requestAnimationFrame(update);
+        }
+
+        const handleJump = (e) => { 
+            if(!gameActive) return;
+            if(e.type === 'keydown' && e.code !== 'Space') return;
+            velocity = jump; e.preventDefault();
+        };
+        canvas.addEventListener("mousedown", handleJump);
+        document.addEventListener("keydown", handleJump);
 
         function buatStiker() {
             const emoji = ['🐱', '🐰', '💖', '🧸', '🍓', '🎀', '🌸', '✨'];
@@ -231,8 +287,7 @@
                 let s = document.createElement('div');
                 s.className = 'sticker';
                 s.innerHTML = emoji[Math.floor(Math.random() * emoji.length)];
-                s.style.left = Math.random() * 95 + 'vw';
-                s.style.top = Math.random() * 95 + 'vh';
+                s.style.left = Math.random() * 95 + 'vw'; s.style.top = Math.random() * 95 + 'vh';
                 s.style.fontSize = (Math.random() * 20 + 20) + 'px';
                 s.style.animationDelay = (Math.random() * 3) + 's';
                 document.body.appendChild(s);
