@@ -57,7 +57,6 @@
             background: white; padding: 12px; margin: 60px 0;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             border: 10px solid #fff; outline: 2px solid var(--pink-utama);
-            transition: 0.5s;
         }
 
         .bingkai-foto img { width: 100%; display: block; border-radius: 2px; }
@@ -167,20 +166,15 @@
 
         function bukaKejutan() {
             const lagu = document.getElementById('musik');
-            // DURASI: Mulai dari detik ke-10
+            // DURASI: Mulai dari detik ke-8
             lagu.currentTime = 8; 
             lagu.volume = 0;
             
             lagu.play().then(() => {
                 let vol = 0;
-                // FADE IN dipercepat (naik setiap 50ms)
                 let fadeIn = setInterval(() => {
-                    if (vol < 1) { 
-                        vol += 0.1; 
-                        lagu.volume = Math.min(vol, 1); 
-                    } else { 
-                        clearInterval(fadeIn); 
-                    }
+                    if (vol < 1) { vol += 0.1; lagu.volume = Math.min(vol, 1); } 
+                    else { clearInterval(fadeIn); }
                 }, 50); 
             });
 
@@ -209,13 +203,13 @@
             buatStiker();
         }
 
-        let gameStarted = false;
+        // --- LOGIKA GAME EASY MODE ---
         const canvas = document.getElementById("flappyCanvas");
         const ctx = canvas.getContext("2d");
         const scoreEl = document.getElementById("scoreBoard");
         const startBtn = document.getElementById("startBtn");
 
-        let birdY = 200, gravity = 0.6, velocity = 0, jump = -8, score = 0;
+        let birdY = 200, gravity = 0.5, velocity = 0, jump = -7, score = 0;
         let pipes = [], frame = 0, gameActive = false;
         const birdSize = 45;
 
@@ -237,8 +231,8 @@
         }
 
         function createPipe() {
-            if (frame % 100 === 0) {
-                let gap = 150;
+            if (frame % 110 === 0) { // Pipa muncul lebih jarang
+                let gap = 180; // Celah pipa LEBIH LEBAR (Sangat Mudah)
                 let pipeTopHeight = Math.random() * (canvas.height - gap - 100) + 50;
                 pipes.push({ x: canvas.width, top: pipeTopHeight, bottom: pipeTopHeight + gap });
             }
@@ -247,11 +241,13 @@
         function drawPipes() {
             ctx.fillStyle = "#ffafbd"; 
             pipes.forEach((p, index) => {
-                p.x -= 2.5;
+                p.x -= 2.2; // Laju pipa LEBIH LAMBAT
                 ctx.fillRect(p.x, 0, 50, p.top);
                 ctx.fillRect(p.x, p.bottom, 50, canvas.height - p.bottom);
                 if (p.x + 50 < 0) { pipes.splice(index, 1); score++; scoreEl.innerText = "Score: " + score; }
-                if (70 + 15 > p.x && 70 - 15 < p.x + 50 && (birdY - 15 < p.top || birdY + 15 > p.bottom)) {
+                
+                // Collision detection yang lebih bersahabat (dikurangi radiusnya sedikit)
+                if (70 + 12 > p.x && 70 - 12 < p.x + 50 && (birdY - 12 < p.top || birdY + 12 > p.bottom)) {
                     gameOver();
                 }
             });
